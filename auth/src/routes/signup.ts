@@ -1,9 +1,9 @@
 import express, { Request, Response } from 'express';
-import { body, validationResult } from 'express-validator';
+import { body } from 'express-validator';
 import { User } from '../models/user';
-
-import { RequestValidationError } from '../errors/request-validation-error';
 import { BadRequestError } from '../errors/bad-request-error';
+import jwt from 'jsonwebtoken';
+import { validateRequest } from '../middlewares/validate-request';
 
 const router = express.Router();
 
@@ -17,15 +17,10 @@ router.post(
             .withMessage('Password must be between 6 and 20 characters'),
         // validator will add messages to the request, which you can then pull off of the request and send back to the user
     ],
+    validateRequest,
     async (req: Request, res: Response) => {
-        const errors = validationResult(req);
-
-        if (!errors.isEmpty()) {
-            throw new RequestValidationError(errors.array());
-        }
         const { email, password } = req.body;
 
-        // query db to see if user exists
         const existingUser = await User.findOne({ email });
 
         if (existingUser) {
@@ -33,14 +28,22 @@ router.post(
             throw new BadRequestError('Email in use');
         }
 
-        // hash password - skip for now
-
-        // create new User
         const user = User.build({ email, password });
-        // persist to db
         await user.save();
 
-        // send back authentication
+        console.log('user', user.id);
+
+        const userJwt = jwt.sign(
+            {
+                id: user.id,
+                email: user.email,
+            },
+            process.env.JWT_KEY!
+        );
+
+        // store on session object
+        req.session = { jwt: userJwt };
+
         res.status(201).send(user);
     }
 );

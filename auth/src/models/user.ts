@@ -20,31 +20,36 @@ interface UserDoc extends mongoose.Document {
     password: string;
 }
 
-const userSchema = new mongoose.Schema({
-    email: {
-        type: String,
-        required: true,
+const userSchema = new mongoose.Schema(
+    {
+        email: {
+            type: String,
+            required: true,
+        },
+        password: {
+            type: String,
+            required: true,
+        },
     },
-    password: {
-        type: String,
-        required: true,
-    },
-});
+    {
+        toJSON: {
+            transform(doc, ret) {
+                ret.id = ret._id;
+                delete ret._id;
+                delete ret.password; // remove password from object
+                delete ret.__v;
+            },
+        },
+    }
+);
 
-// middleware function implemented in mongoose
+// pre-save hook
 userSchema.pre('save', async function (done) {
-    console.log('hashing 1?');
-    // note we didn't use an arrow function because 'this' refers to the current document. if you use an arrow function, it will overwrite this.
-
-    // makes sure that we only hash the password if the PASSWORD is modified. so we can update the user's email, without hashing the password again.
-    // isModified will return true on the first save, so will work for initial commit
     if (this.isModified('password')) {
-        console.log('hashing 2?');
         const hashed = await Password.toHash(this.get('password'));
         this.set('password', hashed);
-        // need to call done() because of how mongoose handles async/await...
     }
-    done();
+    done(); // because we're using async/await
 });
 
 // add a custom function build() to the UserSchema
@@ -64,3 +69,9 @@ export { User };
 // 1. create a schema, then add any methods to schema.static
 // 2. create a model from the schema
 // 3. user the model to save instances of the schema object.
+
+// makes sure that we only hash the password if the PASSWORD is modified. so we can update the user's email, without hashing the password again.
+
+// isModified will return true on the first save, so will work for initial commit
+
+// note we didn't use an arrow function in userSchema.pre() because 'this' refers to the current document. if you use an arrow function, it will overwrite this.

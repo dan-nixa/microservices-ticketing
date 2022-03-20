@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express, { request, Request, Response } from 'express';
 import { body } from 'express-validator';
 import { User } from '../models/user';
 import { BadRequestError } from '../errors/bad-request-error';
@@ -43,6 +43,7 @@ router.post(
 
         // store on session object
         req.session = { jwt: userJwt };
+        console.log(process.env.JWT_KEY!);
 
         res.status(201).send(user);
     }

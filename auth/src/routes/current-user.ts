@@ -1,9 +1,12 @@
 import express from 'express';
+import { currentUser } from '../middlewares/current-user';
 
 const router = express.Router();
 
-router.get('/api/users/currentuser', (req, res) => {
-    res.send('current-user route!');
+router.get('/api/users/currentuser', currentUser, (req, res) => {
+    res.send({ currentUser: req.currentUser || null });
 });
 
 export { router as currentUserRouter };
+
+// --> if currentUser is not defined, then we want to send back null, not undefined.

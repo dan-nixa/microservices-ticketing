@@ -22,9 +22,6 @@ router.post(
         const { email, password } = req.body;
         const existingUser = await User.findOne({ email });
 
-        console.log(
-            `attempting to sign in email: ${email} and password: ${password}`
-        );
         if (!existingUser) {
             throw new BadRequestError('Invalid Credentials');
         }
@@ -47,7 +44,6 @@ router.post(
 
         // store on session object
         req.session = { jwt: userJwt };
-        console.log('req.session is: ', req.session);
 
         res.status(200).send(existingUser);
     }

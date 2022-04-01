@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from 'express';
-import { nextTick } from 'process';
 import { CustomError } from '../errors/custom-error';
 
 export const errorHandler = (
@@ -8,9 +7,6 @@ export const errorHandler = (
     res: Response,
     next: NextFunction
 ) => {
-    console.log('error description', err);
-    console.log('Instanceof CustomError', err instanceof CustomError);
-
     if (err instanceof CustomError) {
         return res
             .status(err.statusCode)
@@ -19,7 +15,7 @@ export const errorHandler = (
     next();
 };
 
-// STANDARD ERROR FORMAT
+// STANDARD ERROR FORMAT for our app
 // {
 //     errors: {
 //         message: string,

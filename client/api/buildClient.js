@@ -15,3 +15,5 @@ export default ({ req }) => {
         });
     }
 };
+
+// builds an axios client to handle when we're are making a request from the browser or from one service to another

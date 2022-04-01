@@ -31,12 +31,12 @@ const userSchema = new mongoose.Schema(
             required: true,
         },
     },
-    {
+    { // clean up object that userSchema returns
         toJSON: {
             transform(doc, ret) {
                 ret.id = ret._id;
                 delete ret._id;
-                delete ret.password; // remove password from object
+                delete ret.password; 
                 delete ret.__v;
             },
         },

@@ -1,4 +1,4 @@
-import express, { request, Request, Response } from 'express';
+import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
 import { User } from '../models/user';
 import { BadRequestError } from '../errors/bad-request-error';

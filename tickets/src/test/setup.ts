@@ -57,9 +57,5 @@ global.signin = () => {
     // Take JSON and encode it as base64
     const base64 = Buffer.from(sessionJSON).toString('base64');
 
-    // const result = [`express:sess=${base64}`];
-    // console.log(result);
-    // return a string thats the cookie with the encoded data
-    // return result;
     return [`express:sess=${base64}`];
 };

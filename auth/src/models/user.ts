@@ -13,8 +13,7 @@ interface UserModel extends mongoose.Model<UserDoc> {
 }
 
 // mongoose adds properties to objects it creates (mongoose.Model).
-// this interface indicates what properties that the UserDoc will
-// have after it's created
+// this interface indicates what properties that the UserDoc will have after it's created
 interface UserDoc extends mongoose.Document {
     email: string;
     password: string;
@@ -31,12 +30,13 @@ const userSchema = new mongoose.Schema(
             required: true,
         },
     },
-    { // clean up object that userSchema returns
+    {
+        // clean up object that userSchema returns
         toJSON: {
             transform(doc, ret) {
                 ret.id = ret._id;
                 delete ret._id;
-                delete ret.password; 
+                delete ret.password;
                 delete ret.__v;
             },
         },

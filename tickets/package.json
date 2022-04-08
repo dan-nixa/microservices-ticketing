@@ -18,7 +18,7 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "@dbtix/microserv-common": "^1.0.3",
+        "@dbtix/microserv-common": "^1.0.4",
         "@types/cookie-session": "^2.0.44",
         "@types/jsonwebtoken": "^8.5.8",
         "@types/mongoose": "^5.11.97",

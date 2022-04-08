@@ -29,6 +29,7 @@ router.post(
             res.status(201).send(ticket);
         } catch (e) {
             console.log('hit error trying to save doc', e);
+            res.send(e);
         }
     }
 );

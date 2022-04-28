@@ -7,10 +7,10 @@ import {
     NotFoundError,
     currentUser,
 } from '@dbtix/microserv-common';
-import { createTicketRouter } from './routes/new';
-import { showTicketRouter } from './routes/show';
+import { createTicketRouter } from './routes/new-ticket';
+import { showTicketRouter } from './routes/show-ticket';
 import { indexTicketRouter } from './routes';
-import { updateTicketRouter } from './routes/update';
+import { updateTicketRouter } from './routes/update-ticket';
 
 const app = express();
 app.set('trust proxy', true);

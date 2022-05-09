@@ -1,10 +1,10 @@
 import request from 'supertest';
 import { app } from '../../app';
 import { Ticket } from '../../models/ticket';
+import { natsWrapper } from '../../nats-wrapper';
 
 it('has a route handler listening to /api/tickets for post requests', async () => {
     const response = await request(app).post('/api/tickets').send({});
-
     expect(response.status).not.toEqual(404);
 });
 
@@ -60,6 +60,10 @@ it('returns an error if an invalid price is provided', async () => {
 });
 
 it('creates a ticket with valid inputs', async () => {
+    // becaused we mocked the natswrapper, this doesn't actually send a nats message when we test?
+
+    console.log('NatsWrapper being used in test', natsWrapper);
+
     let tickets = await Ticket.find({});
 
     expect(tickets.length).toEqual(0);
@@ -75,6 +79,18 @@ it('creates a ticket with valid inputs', async () => {
 
     tickets = await Ticket.find({});
     expect(tickets.length).toEqual(1);
-    console.log(tickets[0].title);
     expect(tickets[0].price).toEqual(20);
+});
+
+it('publishes an event', async () => {
+    await request(app)
+        .post('/api/tickets')
+        .set('Cookie', global.signin())
+        .send({
+            title: 'test',
+            price: 20,
+        })
+        .expect(201);
+
+    expect(natsWrapper.client.publish).toHaveBeenCalled();
 });

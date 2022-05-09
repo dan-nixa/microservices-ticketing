@@ -10,7 +10,7 @@ const start = async () => {
         throw new Error('MONGO_URI must be defined');
     }
     if (!process.env.CLIENT_ID) {
-        throw new Error('CLIENT_ID must be defined');
+        throw new Error('NATS CLIENT_ID must be defined');
     }
     if (!process.env.NATS_CLUSTER_ID) {
         throw new Error('NATS CLUSTER ID must be defined');
@@ -39,7 +39,7 @@ const start = async () => {
     }
 
     app.listen(3000, () => {
-        console.log('Tickets Service - Listening on port 3000');
+        console.log('Orders Service - Listening on port 3000');
     });
 };
 
